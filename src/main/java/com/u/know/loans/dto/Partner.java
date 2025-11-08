@@ -1,6 +1,5 @@
-package com.u.know.loans.domain;
+package com.u.know.loans.dto;
 
-import com.u.know.loans.controller.request.PartnerRequest;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,8 +17,8 @@ public class Partner {
 
     private String name;
 
-    public Partner (PartnerRequest request) {
-        this.name = request.getName();
+    public Partner(String name) {
+        this.name = name;
     }
 
 }
