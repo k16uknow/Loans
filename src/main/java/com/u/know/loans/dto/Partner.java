@@ -1,7 +1,7 @@
-package com.u.know.loans.domain;
+package com.u.know.loans.dto;
 
-import com.u.know.loans.controller.request.PartnerRequest;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
@@ -11,6 +11,7 @@ import org.springframework.data.relational.core.mapping.Table;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Partner {
 
     @Id
@@ -18,8 +19,8 @@ public class Partner {
 
     private String name;
 
-    public Partner (PartnerRequest request) {
-        this.name = request.getName();
+    public Partner(String name) {
+        this.name = name;
     }
 
 }
