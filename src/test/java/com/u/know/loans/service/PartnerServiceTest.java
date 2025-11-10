@@ -17,9 +17,9 @@ import java.util.List;
 
 class PartnerServiceTest {
 
+    private PartnerService service;
     private PartnerRepository repository;
     private PartnerAssembler assembler;
-    private PartnerService service;
 
     private PartnerRequest partnerRequest;
     private Partner partner;

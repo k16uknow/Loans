@@ -25,7 +25,7 @@ public class PartnerService {
 
     public Mono<PartnerResponse> savePartner(PartnerRequest request){
         return repository.save(assembler.fromRequest(request))
-                .doOnNext(saved -> log.info("Saved partner :{}", saved))
+                .doOnNext(saved -> log.info("New partner created -> {}", saved))
                 .map(assembler::toResponse);
     }
 

@@ -16,23 +16,14 @@ public class Borrower {
 
     @Id
     private Integer id;
-
     private String firstName;
-
     private String paternalLast;
-
     private String maternalLast;
-
     private String phone;
-
     private String address;
-
     private String occupation;
-
     private String workplace;
-
     private String status;
-
     private Integer rating;
 
 }

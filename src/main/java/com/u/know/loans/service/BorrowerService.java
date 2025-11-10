@@ -25,7 +25,7 @@ public class BorrowerService {
 
     public Mono<BorrowerResponse> saveBorrower(BorrowerRequest request) {
         return repository.save(assembler.fromRequest(request))
-                .doOnNext(saved -> log.info("Saved borrower : {}", saved))
+                .doOnNext(saved -> log.info("New borrower created -> {}", saved))
                 .map(assembler::toResponse);
     }
 

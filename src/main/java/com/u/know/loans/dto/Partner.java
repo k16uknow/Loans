@@ -16,7 +16,6 @@ public class Partner {
 
     @Id
     private Integer id;
-
     private String name;
 
     public Partner(String name) {
