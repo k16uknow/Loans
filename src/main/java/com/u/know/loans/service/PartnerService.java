@@ -31,13 +31,23 @@ public class PartnerService {
 
     public Mono<PartnerResponse> getPartner(Integer id) {
         return repository.findById(id)
-                .switchIfEmpty(Mono.error(new NotFoundException("Partner with id " + id + " does not exist")))
+                .switchIfEmpty(Mono.error(new NotFoundException("Partner with id " + id + " not found")))
+                .doOnNext(found ->
+                        log.info("Partner with id {} found: {}",
+                                found.getId(),
+                                found.getName()
+                        ))
                 .map(assembler::toResponse);
     }
 
     public Mono<PartnerResponse> updatePartner(Integer id, PartnerRequest request) {
         return repository.findById(id)
-                .switchIfEmpty(Mono.error(new NotFoundException("Partner with id " + id + " does not exist")))
+                .switchIfEmpty(Mono.error(new NotFoundException("Partner with id " + id + " not found")))
+                .doOnNext(found ->
+                        log.info("Partner with id {} found for editing: {}",
+                                found.getId(),
+                                found.getName()
+                        ))
                 .flatMap(partner -> {
                     partner.setName(request.name());
                     return repository.save(partner);

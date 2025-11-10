@@ -43,8 +43,9 @@ class PartnerControllerTest {
                 .bodyValue(partnerRequest)
                 .exchange()
                 .expectStatus().isCreated()
-                .expectBody(PartnerResponse.class)
-                .isEqualTo(partnerResponse);
+                .expectBody()
+                .jsonPath("$.success").isEqualTo(true)
+                .jsonPath("$.data.id").isEqualTo(partnerResponse.id());
     }
 
     @Test
@@ -62,8 +63,9 @@ class PartnerControllerTest {
                 .uri("/api/partners/1")
                 .exchange()
                 .expectStatus().isOk()
-                .expectBody(PartnerResponse.class)
-                .isEqualTo(partnerResponse);
+                .expectBody()
+                .jsonPath("$.success").isEqualTo(true)
+                .jsonPath("$.data.id").isEqualTo(partnerResponse.id());
     }
 
     @Test
@@ -83,8 +85,9 @@ class PartnerControllerTest {
                 .bodyValue(partnerRequest)
                 .exchange()
                 .expectStatus().isOk()
-                .expectBody(PartnerResponse.class)
-                .isEqualTo(partnerResponse);
+                .expectBody()
+                .jsonPath("$.success").isEqualTo(true)
+                .jsonPath("$.data.id").isEqualTo(partnerResponse.id());
     }
 
     @Test

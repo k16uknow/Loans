@@ -21,30 +21,32 @@ public class PartnerController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Mono<ResponseEntity<PartnerResponse>> create(@RequestBody Mono<PartnerRequest> requestMono) {
+    public Mono<ResponseEntity<ApiResponse<PartnerResponse>>> create(@RequestBody Mono<PartnerRequest> requestMono) {
         return requestMono
                 .flatMap(service::savePartner)
-                .map(response -> ResponseEntity.status(HttpStatus.CREATED).body(response));
+                .map(response -> ResponseEntity.status(HttpStatus.CREATED)
+                        .body(ApiResponse.success(response)));
     }
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Mono<ResponseEntity<PartnerResponse>> get(@PathVariable("id") Integer id) {
+    public Mono<ResponseEntity<ApiResponse<PartnerResponse>>> read(@PathVariable Integer id) {
         return service.getPartner(id)
-                .map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
-    }
-
-    @PutMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public Mono<ResponseEntity<PartnerResponse>> update(@PathVariable Integer id, @RequestBody Mono<PartnerRequest> requestMono) {
-        return requestMono
-                .flatMap(request -> service.updatePartner(id, request))
-                .map(response -> ResponseEntity.status(HttpStatus.OK).body(response));
+                .map(response -> ResponseEntity.ok(ApiResponse.success(response)));
     }
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public Flux<PartnerResponse> get(){
+    public Flux<PartnerResponse> read(){
         return service.getPartners();
     }
+
+    @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public Mono<ResponseEntity<ApiResponse<PartnerResponse>>> update(@PathVariable Integer id, @RequestBody Mono<PartnerRequest> requestMono) {
+        return requestMono
+                .flatMap(request -> service.updatePartner(id, request))
+                .map(response -> ResponseEntity.ok(ApiResponse.success(response)));
+    }
+
 }
