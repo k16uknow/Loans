@@ -17,18 +17,8 @@ public class LoanAssembler implements Assembler<Loan, LoanRequest, LoanResponse>
                 .principal(request.principal())
                 .numberOfPayments(request.numberOfPayments())
                 .interestRate(request.interestRate())
-                .futureValue(request.futureValue())
                 .releaseDate(request.releaseDate())
-                .firstPaymentDate(request.firstPaymentDate())
-                .lastPaymentDate(request.lastPaymentDate())
-                .grossProfit(request.grossProfit())
-                .majorityPartnerPct(request.majorityPartnerPct())
-                .majorityPartnerProfit(request.majorityPartnerProfit())
                 .minorityPartnerPct(request.minorityPartnerPct())
-                .minorityPartnerProfit(request.minorityPartnerProfit())
-                .conceptRequired(request.conceptRequired())
-                .axen(request.axen())
-                .insertDate(request.insertDate())
                 .comments(request.comments())
                 .build();
     }

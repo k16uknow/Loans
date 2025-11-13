@@ -30,13 +30,13 @@ class PartnerControllerTest {
     private PartnerResponse partnerResponse;
 
     @BeforeEach
-    public void setUp() {
+    public void setup() {
         partnerRequest = new PartnerRequest("Partner Test");
         partnerResponse = new PartnerResponse(1, "Partner Test");
     }
 
     @Test
-    void post() {
+    void create() {
         Mockito.when(service.savePartner(Mockito.any())).thenReturn(Mono.just(partnerResponse));
         webTestClient.post()
                 .uri("/api/partners")
@@ -49,7 +49,7 @@ class PartnerControllerTest {
     }
 
     @Test
-    void post_nullBody() {
+    void create_nullRequestBody() {
         webTestClient.post()
                 .uri("/api/partners")
                 .exchange()
@@ -57,7 +57,7 @@ class PartnerControllerTest {
     }
 
     @Test
-    void get() {
+    void read() {
         Mockito.when(service.getPartner(Mockito.any())).thenReturn(Mono.just(partnerResponse));
         webTestClient.get()
                 .uri("/api/partners/1")
@@ -69,7 +69,7 @@ class PartnerControllerTest {
     }
 
     @Test
-    void get_NotFoundException() {
+    void read_NotFoundException() {
         Mockito.when(service.getPartner(Mockito.any())).thenReturn(Mono.error(new NotFoundException("Partner with id 1 does not exist")));
         webTestClient.get()
                 .uri("/api/partners/1")
@@ -101,7 +101,7 @@ class PartnerControllerTest {
     }
 
     @Test
-    void getAll() {
+    void readAll() {
         Mockito.when(service.getPartners()).thenReturn(
                 Flux.fromIterable(List.of(
                         new PartnerResponse(1,"Partner test 1"),

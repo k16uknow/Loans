@@ -5,10 +5,15 @@ import com.u.know.loans.controller.response.BorrowerResponse;
 import com.u.know.loans.controller.response.LoanResponse;
 import com.u.know.loans.controller.response.PartnerResponse;
 import com.u.know.loans.dto.Loan;
+import com.u.know.loans.exception.TransactionException;
+import com.u.know.loans.repository.InstallmentRepository;
 import com.u.know.loans.repository.LoanRepository;
 import com.u.know.loans.service.assembler.LoanAssembler;
+import com.u.know.loans.service.utils.InstallmentGenerator;
+import com.u.know.loans.service.utils.LoanHeaderGenerator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.reactive.TransactionalOperator;
 import reactor.core.publisher.Mono;
 
 @Slf4j
@@ -19,15 +24,25 @@ public class LoanService {
 
     private final LoanAssembler assembler;
 
+    private final TransactionalOperator txOperator;
+
     private final BorrowerService borrowerService;
 
     private final PartnerService partnerService;
 
-    public LoanService(LoanRepository repository, LoanAssembler assembler, BorrowerService borrowerService, PartnerService partnerService) {
+    private final InstallmentRepository installmentRepository;
+
+    public LoanService(LoanRepository repository,
+                       LoanAssembler assembler,
+                       TransactionalOperator txOperator,
+                       BorrowerService borrowerService,
+                       PartnerService partnerService, InstallmentRepository installmentRepository) {
         this.repository = repository;
         this.assembler = assembler;
+        this.txOperator = txOperator;
         this.borrowerService = borrowerService;
         this.partnerService = partnerService;
+        this.installmentRepository = installmentRepository;
     }
 
     public Mono<LoanResponse> saveLoan(Mono<LoanRequest> requestMono) {
@@ -41,38 +56,26 @@ public class LoanService {
                                 PartnerResponse majPartner = tuple.getT2();
                                 PartnerResponse minPartner = tuple.getT3();
                                 Loan loan = assembler.fromRequest(request);
-                                loan.setBorrowerId(borrower.id());
-                                loan.setMajorityPartnerId(majPartner.id());
-                                loan.setMinorityPartnerId(minPartner.id());
-                                return repository.save(loan).doOnNext(saved -> {
-                                    log.info("New loan created -> Maj Partner: {}, Min Partner: {}, Borrower: {} {}, Principal: ${}",
-                                            majPartner.name(),
-                                            minPartner.name(),
-                                            borrower.firstName(),
-                                            borrower.paternalLast(),
-                                            loan.getPrincipal());
-                                });
-                            });
-        })
-                .map(assembler::toResponse);
-    }
-
-    // this helps to understand map -> sync Transformation | flatMap -> async transformation
-    public Mono<LoanResponse> saveLoanFirstApproach(Mono<LoanRequest> requestMono) {
-        return requestMono.flatMap(request -> {
-            Loan loan = assembler.fromRequest(request);
-            return borrowerService.getBorrower(request.borrowerId()).flatMap(borrower ->
-                {
-                    loan.setBorrowerId(borrower.id());
-                    return partnerService.getPartner(request.majorityPartnerId()).flatMap(majPartner -> {
-                        loan.setMajorityPartnerId(majPartner.id());
-                        return partnerService.getPartner(request.minorityPartnerId()).flatMap(minPartner -> {
-                            loan.setMinorityPartnerId(minPartner.id());
-                            return repository.save(loan);
-                        });
+                                LoanHeaderGenerator.fillLoanHeader(loan, borrower, majPartner.id(), minPartner.id());
+                                return repository.save(loan)
+                                        .flatMap(savedLoan -> {
+                                            savedLoan.setConceptRequired("P" + savedLoan.getId() + borrower.firstName() + " " +  borrower.paternalLast());
+                                            return repository.save(loan)
+                                                    .flatMap(updatedLoan ->
+                                                            installmentRepository.saveAll(InstallmentGenerator.generateInstallmentsFirstPlanVersion(savedLoan))
+                                                                    .then(Mono.just(savedLoan)));
+                                        })
+                                        .as(txOperator::transactional)
+                                        .doOnNext(saved -> log.info("New loan created -> Maj Partner: {}, Min Partner: {}, Borrower: {} {}, Principal: ${}",
+                                                majPartner.name(),
+                                                minPartner.name(),
+                                                borrower.firstName(),
+                                                borrower.paternalLast(),
+                                                loan.getPrincipal()))
+                                        .doOnError(e -> log.error("New Loan could not be stored due to : {}", e.getMessage()))
+                                        .onErrorMap(e -> new TransactionException("New Loan could not be stored due to an Internal Server Error"));
                     });
-                });
-            }).map(assembler::toResponse);
+        }).map(assembler::toResponse);
     }
 
 }

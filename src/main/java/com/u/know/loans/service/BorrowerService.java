@@ -32,6 +32,7 @@ public class BorrowerService {
     public Mono<BorrowerResponse> getBorrower(Integer id) {
         return repository.findById(id)
                 .switchIfEmpty(Mono.error(new NotFoundException("Borrower with id " + id +" not found")))
+                .doOnError(e -> log.error("Borrower with id {} not found", id))
                 .doOnNext(found ->
                         log.info("Borrower with id {} found: {}",
                                 found.getId(),
@@ -43,7 +44,8 @@ public class BorrowerService {
 
     public Mono<BorrowerResponse> updateBorrower(Integer id, BorrowerRequest request) {
         return repository.findById(id)
-                .switchIfEmpty(Mono.error(new NotFoundException("Borrower with id " + id +" not found")))
+                .switchIfEmpty(Mono.error(new NotFoundException("Borrower with id " + id +" not found for editing")))
+                .doOnError(e -> log.error("Borrower with id {} not found for editing", id))
                 .doOnNext(found ->
                         log.info("Borrower with id {} found for editing: {}",
                                 found.getId(),

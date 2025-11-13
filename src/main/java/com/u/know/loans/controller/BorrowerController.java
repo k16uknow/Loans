@@ -32,7 +32,7 @@ public class BorrowerController {
     @ResponseStatus(HttpStatus.OK)
     public Mono<ResponseEntity<ApiResponse<BorrowerResponse>>> read(@PathVariable Integer id) {
         return service.getBorrower(id)
-                .map(response -> ResponseEntity.status(HttpStatus.CREATED)
+                .map(response -> ResponseEntity.status(HttpStatus.OK)
                         .body(ApiResponse.success(response)));
     }
 

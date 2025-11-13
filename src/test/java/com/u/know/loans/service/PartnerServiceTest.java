@@ -6,6 +6,7 @@ import com.u.know.loans.dto.Partner;
 import com.u.know.loans.exception.NotFoundException;
 import com.u.know.loans.repository.PartnerRepository;
 import com.u.know.loans.service.assembler.PartnerAssembler;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -34,14 +35,15 @@ class PartnerServiceTest {
         partnerRequest = new PartnerRequest("Partner Test");
         partner = Partner.builder().name("Partner Test").id(1).build();
         partnerResponse = new PartnerResponse(1, "Partner Test");
+        Mockito.when(repository.findById(1)).thenReturn(Mono.just(partner));
+        Mockito.when(repository.save(Mockito.any(Partner.class)))
+                .thenReturn(Mono.just(partner));
     }
 
     @Test
     void savePartner() {
         Mockito.when(assembler.fromRequest(Mockito.any())).thenReturn(partner);
         Mockito.when(assembler.toResponse(Mockito.any())).thenReturn(partnerResponse);
-        Mockito.when(repository.save(Mockito.any(Partner.class)))
-                .thenReturn(Mono.just(partner));
 
         StepVerifier.create(service.savePartner(partnerRequest))
                 .expectNextMatches(pResponse -> pResponse.name().equals(partnerRequest.name()))
@@ -61,31 +63,25 @@ class PartnerServiceTest {
 
     @Test
     void getPartner_NotFoundException() {
-        Mockito.when(repository.findById(Mockito.anyInt()))
+        Mockito.when(repository.findById(0))
                 .thenReturn(Mono.empty());
 
         StepVerifier.create(service.getPartner(0))
-                .expectError(NotFoundException.class)
+                .expectErrorSatisfies(e -> {
+                    Assertions.assertInstanceOf(NotFoundException.class, e);
+                    Assertions.assertEquals("Partner with id 0 not found", e.getMessage());
+                })
                 .verify();
     }
 
     @Test
     void updatedPartner() {
-        PartnerResponse updatedPartnerResponse = new PartnerResponse(1, "Partner Test Updated");
-        PartnerRequest updatedPartnerRequest = new PartnerRequest("Partner Test Updated");
-
-        Mockito.when(repository.findById(Mockito.anyInt()))
-                .thenReturn(Mono.just(partner));
-
-        partner.setName(updatedPartnerRequest.name());
-        Mockito.when(repository.save(Mockito.any()))
-                .thenReturn(Mono.just(partner));
-
         Mockito.when(assembler.toResponse(Mockito.any()))
-                .thenReturn(updatedPartnerResponse);
+                .thenReturn(new PartnerResponse(1, "Partner Test Updated"));
 
-        StepVerifier.create(service.updatePartner(1, updatedPartnerRequest))
-                .expectNextMatches(uPartnerResponse -> uPartnerResponse.equals(updatedPartnerResponse))
+
+        StepVerifier.create(service.updatePartner(1, partnerRequest))
+                .expectNextMatches(uPartnerResponse -> uPartnerResponse.name().equals("Partner Test Updated"))
                 .verifyComplete();
 
     }
@@ -93,11 +89,14 @@ class PartnerServiceTest {
     @Test
     void updatedPartner_NotFoundException() {
         PartnerRequest updatedPartnerRequest = new PartnerRequest("Partner Test Updated");
-        Mockito.when(repository.findById(Mockito.anyInt()))
+        Mockito.when(repository.findById(0))
                 .thenReturn(Mono.empty());
 
         StepVerifier.create(service.updatePartner(0, updatedPartnerRequest))
-                .expectError(NotFoundException.class)
+                .expectErrorSatisfies(e -> {
+                    Assertions.assertInstanceOf(NotFoundException.class, e);
+                    Assertions.assertEquals("Partner with id 0 not found for editing", e.getMessage());
+                })
                 .verify();
 
     }

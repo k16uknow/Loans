@@ -1,8 +1,5 @@
 package com.u.know.loans.exception;
 
-import lombok.Getter;
-
-@Getter
 public class NotFoundException extends RuntimeException {
 
     public NotFoundException (String message) {

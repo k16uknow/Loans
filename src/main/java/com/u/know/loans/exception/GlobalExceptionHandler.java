@@ -32,4 +32,15 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiResponse<ApiError>> handleDataIntegrityViolationException(DataIntegrityViolationException ex) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ApiResponse.error("DATA_INTEGRITY_VIOLATION", ex.getMessage()));
     }
+
+    @ExceptionHandler(value = TransactionException.class)
+    public ResponseEntity<ApiResponse<ApiError>> handleTransactionException(TransactionException ex) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ApiResponse.error("TRANSACTION_ERROR", ex.getMessage()));
+    }
+
+    @ExceptionHandler(value = BadRequestException.class)
+    public ResponseEntity<ApiResponse<ApiError>> handleBadRequestException(BadRequestException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.error("BAD_REQUEST_EXCEPTION", ex.getMessage()));
+    }
+
 }

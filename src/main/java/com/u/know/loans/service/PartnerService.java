@@ -32,6 +32,7 @@ public class PartnerService {
     public Mono<PartnerResponse> getPartner(Integer id) {
         return repository.findById(id)
                 .switchIfEmpty(Mono.error(new NotFoundException("Partner with id " + id + " not found")))
+                .doOnError(e -> log.error("Partner with id {} not found", id))
                 .doOnNext(found ->
                         log.info("Partner with id {} found: {}",
                                 found.getId(),
@@ -42,7 +43,8 @@ public class PartnerService {
 
     public Mono<PartnerResponse> updatePartner(Integer id, PartnerRequest request) {
         return repository.findById(id)
-                .switchIfEmpty(Mono.error(new NotFoundException("Partner with id " + id + " not found")))
+                .switchIfEmpty(Mono.error(new NotFoundException("Partner with id " + id + " not found for editing")))
+                .doOnError(e -> log.error("Partner with id {} not found for editing", id))
                 .doOnNext(found ->
                         log.info("Partner with id {} found for editing: {}",
                                 found.getId(),

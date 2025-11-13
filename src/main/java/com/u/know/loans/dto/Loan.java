@@ -9,6 +9,7 @@ import org.springframework.data.relational.core.mapping.Table;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Table("loan")
 @Data
@@ -36,7 +37,8 @@ public class Loan {
     private BigDecimal minorityPartnerProfit;
     private String conceptRequired;
     private BigDecimal axen;
-    private LocalDate insertDate;
+    private LocalDateTime insertDate;
     private String comments;
+    private Integer planVersion;
 
 }

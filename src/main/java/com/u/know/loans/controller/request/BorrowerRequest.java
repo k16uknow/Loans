@@ -1,5 +1,8 @@
 package com.u.know.loans.controller.request;
 
+import lombok.Builder;
+
+@Builder
 public record BorrowerRequest (
         String firstName,
         String paternalLast,

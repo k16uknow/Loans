@@ -2,6 +2,7 @@ package com.u.know.loans.controller;
 
 import com.u.know.loans.controller.request.LoanRequest;
 import com.u.know.loans.controller.response.LoanResponse;
+import com.u.know.loans.exception.BadRequestException;
 import com.u.know.loans.exception.NotFoundException;
 import com.u.know.loans.service.LoanService;
 import org.junit.jupiter.api.BeforeEach;
@@ -59,6 +60,19 @@ class LoanControllerTest {
                 .expectBody()
                 .jsonPath("$.success").isEqualTo(false)
                 .jsonPath("$.error.message").isEqualTo("Dependency not Found");
+    }
+
+    @Test
+    void create_BadRequest() {
+        Mockito.when(service.saveLoan(Mockito.any())).thenReturn(Mono.error(new BadRequestException("Bad request exception")));
+        webTestClient.post()
+                .uri("/api/loans")
+                .bodyValue(LoanRequest.builder().build())
+                .exchange()
+                .expectStatus().is4xxClientError()
+                .expectBody()
+                .jsonPath("$.success").isEqualTo(false)
+                .jsonPath("$.error.message").isEqualTo("Bad request exception");
     }
 
 }
