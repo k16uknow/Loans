@@ -4,16 +4,19 @@ import com.u.know.loans.controller.request.LoanRequest;
 import com.u.know.loans.controller.response.BorrowerResponse;
 import com.u.know.loans.controller.response.LoanResponse;
 import com.u.know.loans.controller.response.PartnerResponse;
-import com.u.know.loans.dto.Loan;
+import com.u.know.loans.domain.Loan;
 import com.u.know.loans.exception.BadRequestException;
 import com.u.know.loans.exception.NotFoundException;
 import com.u.know.loans.repository.InstallmentRepository;
 import com.u.know.loans.repository.LoanRepository;
 import com.u.know.loans.service.assembler.LoanAssembler;
+import com.u.know.loans.service.assembler.LoanOverviewAssembler;
+import com.u.know.loans.service.loan.LoanService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.springframework.r2dbc.core.DatabaseClient;
 import org.springframework.test.util.AssertionErrors;
 import org.springframework.transaction.reactive.TransactionalOperator;
 import reactor.core.publisher.Flux;
@@ -28,7 +31,9 @@ class LoanServiceTest {
 
     private LoanService service;
     private LoanRepository repository;
+    private DatabaseClient dbClient;
     private LoanAssembler assembler;
+    private LoanOverviewAssembler loanOverviewAssembler;
     private TransactionalOperator txOperator;
     private BorrowerService borrowerService;
     private PartnerService partnerService;
@@ -52,7 +57,9 @@ class LoanServiceTest {
         installmentRepository = Mockito.mock(InstallmentRepository.class);
 
         service = new LoanService(repository,
+                dbClient,
                 assembler,
+                loanOverviewAssembler,
                 txOperator,
                 borrowerService,
                 partnerService,

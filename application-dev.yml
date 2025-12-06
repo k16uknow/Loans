@@ -1,0 +1,23 @@
+spring:
+  config:
+    activate:
+      on-profile: dev
+  r2dbc:
+    url: r2dbc:postgresql://localhost:5432/loans
+    username: loans_user
+    password: i36871Nn
+    properties:
+      schema: public
+  flyway:
+    enabled: true
+    url: jdbc:postgresql://localhost:5432/loans
+    user: loans_user
+    password: i36871Nn
+    locations: classpath:db/migration
+  sql:
+    init:
+      mode: never
+logging:
+  level:
+    org.springframework.r2dbc: DEBUG
+    org.springframework.web: DEBUG

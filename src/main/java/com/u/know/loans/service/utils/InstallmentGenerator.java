@@ -1,8 +1,8 @@
 package com.u.know.loans.service.utils;
 
 
-import com.u.know.loans.dto.Installment;
-import com.u.know.loans.dto.Loan;
+import com.u.know.loans.domain.Installment;
+import com.u.know.loans.domain.Loan;
 import com.u.know.loans.service.enums.InstallmentStatusEnum;
 
 import java.math.BigDecimal;

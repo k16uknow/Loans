@@ -27,4 +27,5 @@ public record LoanResponse(
         String conceptRequired,
         BigDecimal axen,
         LocalDateTime insertDate,
-        String comments) { }
+        String comments,
+        String status) { }

@@ -4,7 +4,7 @@ import com.u.know.loans.controller.request.LoanRequest;
 import com.u.know.loans.controller.response.LoanResponse;
 import com.u.know.loans.exception.BadRequestException;
 import com.u.know.loans.exception.NotFoundException;
-import com.u.know.loans.service.LoanService;
+import com.u.know.loans.service.loan.LoanService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;

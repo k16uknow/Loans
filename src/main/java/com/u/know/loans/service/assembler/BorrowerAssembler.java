@@ -2,7 +2,7 @@ package com.u.know.loans.service.assembler;
 
 import com.u.know.loans.controller.request.BorrowerRequest;
 import com.u.know.loans.controller.response.BorrowerResponse;
-import com.u.know.loans.dto.Borrower;
+import com.u.know.loans.domain.Borrower;
 import org.springframework.stereotype.Component;
 
 @Component

@@ -2,7 +2,7 @@ package com.u.know.loans.service;
 
 import com.u.know.loans.controller.request.PartnerRequest;
 import com.u.know.loans.controller.response.PartnerResponse;
-import com.u.know.loans.dto.Partner;
+import com.u.know.loans.domain.Partner;
 import com.u.know.loans.exception.NotFoundException;
 import com.u.know.loans.repository.PartnerRepository;
 import com.u.know.loans.service.assembler.PartnerAssembler;

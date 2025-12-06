@@ -1,5 +1,5 @@
 package com.u.know.loans.service.assembler;
-import com.u.know.loans.dto.Partner;
+import com.u.know.loans.domain.Partner;
 import com.u.know.loans.controller.request.PartnerRequest;
 import com.u.know.loans.controller.response.PartnerResponse;
 import org.springframework.stereotype.Component;

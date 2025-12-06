@@ -6,6 +6,7 @@ import lombok.Getter;
 public enum InstallmentStatusEnum {
 
     ACTIVE("ACTIVE"),
+    PENDING("PENDING"),
     PAID("PAID"),
     INACTIVE("INACTIVE"),
     REPLACED("REPLACED");

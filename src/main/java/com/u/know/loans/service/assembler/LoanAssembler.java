@@ -2,7 +2,8 @@ package com.u.know.loans.service.assembler;
 
 import com.u.know.loans.controller.request.LoanRequest;
 import com.u.know.loans.controller.response.LoanResponse;
-import com.u.know.loans.dto.Loan;
+import com.u.know.loans.domain.Loan;
+import com.u.know.loans.service.enums.LoanStatusEnum;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -20,6 +21,7 @@ public class LoanAssembler implements Assembler<Loan, LoanRequest, LoanResponse>
                 .releaseDate(request.releaseDate())
                 .minorityPartnerPct(request.minorityPartnerPct())
                 .comments(request.comments())
+                .status(LoanStatusEnum.ACTIVE.getValue())
                 .build();
     }
 
@@ -46,6 +48,7 @@ public class LoanAssembler implements Assembler<Loan, LoanRequest, LoanResponse>
                 .axen(domain.getAxen())
                 .insertDate(domain.getInsertDate())
                 .comments(domain.getComments())
+                .status(domain.getStatus())
                 .build();
     }
 

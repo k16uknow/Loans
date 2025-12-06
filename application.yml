@@ -2,13 +2,13 @@ spring:
   application:
     name: loans-reactive
   r2dbc:
-    url: r2dbc:postgresql://localhost:5432/loans
-    username: postgres
-    password: root
+    pool:
+      enabled: true
+      initial-size: 1
+      max-size: 20
   sql:
     init:
       mode: never
-
 logging:
   level:
-    org.springframework.r2dbc: DEBUG
+    org.springframework.r2dbc: info

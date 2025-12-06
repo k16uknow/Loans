@@ -2,9 +2,11 @@ package com.u.know.loans.controller;
 
 import com.u.know.loans.controller.request.BorrowerRequest;
 import com.u.know.loans.controller.response.BorrowerResponse;
+import com.u.know.loans.controller.response.wrapper.ApiResponse;
 import com.u.know.loans.service.BorrowerService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -20,6 +22,7 @@ public class BorrowerController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     @ResponseStatus(HttpStatus.CREATED)
     public Mono<ResponseEntity<ApiResponse<BorrowerResponse>>> create(@RequestBody Mono<BorrowerRequest> requestMono) {
         return requestMono
@@ -29,6 +32,7 @@ public class BorrowerController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     @ResponseStatus(HttpStatus.OK)
     public Mono<ResponseEntity<ApiResponse<BorrowerResponse>>> read(@PathVariable Integer id) {
         return service.getBorrower(id)
@@ -43,6 +47,7 @@ public class BorrowerController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     @ResponseStatus(HttpStatus.OK)
     public Mono<ResponseEntity<ApiResponse<BorrowerResponse>>> update(@PathVariable Integer id, @RequestBody Mono<BorrowerRequest> requestMono) {
         return requestMono

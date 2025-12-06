@@ -1,4 +1,4 @@
-package com.u.know.loans.dto;
+package com.u.know.loans.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -40,5 +40,6 @@ public class Loan {
     private LocalDateTime insertDate;
     private String comments;
     private Integer planVersion;
+    private String status;
 
 }

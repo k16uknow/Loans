@@ -1,7 +1,7 @@
 package com.u.know.loans.service.utils;
 
 import com.u.know.loans.controller.response.BorrowerResponse;
-import com.u.know.loans.dto.Loan;
+import com.u.know.loans.domain.Loan;
 import com.u.know.loans.exception.BadRequestException;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;

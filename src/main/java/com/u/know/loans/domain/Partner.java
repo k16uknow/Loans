@@ -1,4 +1,4 @@
-package com.u.know.loans.dto;
+package com.u.know.loans.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

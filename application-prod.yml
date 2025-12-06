@@ -1,0 +1,39 @@
+spring:
+  config:
+    activate:
+      on-profile: prod
+#  r2dbc:
+#    url: ${DB_URL}
+#    username: ${DB_USER}
+#    password: ${DB_PASSWORD}
+  r2dbc:
+      url: r2dbc:postgresql://localhost:5432/loans
+      username: loans_user
+      password: i36871Nn
+      properties:
+        schema: public
+        sslMode: prefer   # TODO: Si tu RDS requiere SSL, luego afinamos esto
+  flyway:
+    enabled: true
+    url: jdbc:postgresql://localhost:5432/loans
+    user: loans_user
+    password: i36871Nn
+    locations: classpath:db/migration
+    baseline-on-migrate: false   # como la DB está vacía, no necesitamos baseline
+  sql:
+    init:
+      mode: never # En prod JAMÁS inicialices schema con scripts "así como así"
+logging:
+  level: { root: INFO, org.springframework.r2dbc: WARN, org.springframework.web: INFO }
+server:
+    port: 8080            # En AWS normalmente se deja así, el load balancer mapea puertos
+
+  ## FASE 1 — Preparar el código para producción
+  # con variables de entorno ya configuradas
+  # SPRING_PROFILES_ACTIVE=prod \
+  # DB_HOST=mi-endpoint-rds.amazonaws.com \
+  # DB_PORT=5432 \
+  # DB_NAME=loans_prod \
+  # DB_USER=loans_user \
+  # DB_PASSWORD=super-secreto \
+  # java -jar loans-reactive.jar

@@ -2,7 +2,7 @@ package com.u.know.loans.service;
 
 import com.u.know.loans.controller.request.BorrowerRequest;
 import com.u.know.loans.controller.response.BorrowerResponse;
-import com.u.know.loans.dto.Borrower;
+import com.u.know.loans.domain.Borrower;
 import com.u.know.loans.exception.NotFoundException;
 import com.u.know.loans.repository.BorrowerRepository;
 import com.u.know.loans.service.assembler.BorrowerAssembler;
